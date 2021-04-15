@@ -1,5 +1,7 @@
 #!/bin/bash
 
+RELAXING_TRACK="spotify:track:039xzKjVgqdnmoUOCXuEI2"
+
 breathe() {
   local CHARACTERS="....ooooooOOOOoooooooo...."
   length=${#CHARACTERS}
@@ -32,6 +34,8 @@ exit_with_usage() {
 }
 
 intro() {
+  start_spotify
+
   echo "Get comfortable..."
   sleep 5
 
@@ -53,19 +57,32 @@ parse_arguments() {
   done
 }
 
-say_goodbye() {
-  printf "\n🧘 goodbye 🧘\n"
-  exit
+run()
+{
+  intro
+
+  if [ -n "$OPTNUM" ]
+  then
+    breathe_n_times "$OPTNUM"
+  else
+    echo "Come back when you're ready to breathe properly"
+  fi
 }
 
-trap say_goodbye SIGINT
+say_goodbye() {
+  printf "\n🧘 goodbye 🧘\n"
+  stop_spotify
+}
+
+start_spotify() {
+  osascript -e "tell application \"Spotify\" to play track \"$RELAXING_TRACK\""
+}
+
+stop_spotify() {
+  osascript -e "tell application \"Spotify\" to pause"
+}
+
+trap say_goodbye EXIT
 
 parse_arguments "$@"
-# intro
-
-if [ -n "$OPTNUM" ]
-then
-  breathe_n_times "$OPTNUM"
-else
-  echo "Come back when you're ready to breathe properly"
-fi
+run
