@@ -1,6 +1,7 @@
 #!/bin/bash
 
 RELAXING_TRACK="spotify:track:039xzKjVgqdnmoUOCXuEI2"
+MAX_VOLUME=50
 
 breathe() {
   local CHARACTERS="....ooooooOOOOoooooooo...."
@@ -34,17 +35,16 @@ exit_with_usage() {
 }
 
 intro() {
-  start_spotify
-
-  echo "Get comfortable..."
+  printf "Get comfortable..."
+  start_spotify &
   sleep 5
 
-  printf "Begin breathing in... "
+  printf "\rBegin breathing in... "
   for((i=3;i>=1; i--)){
     printf "%s\b" "$i"
     sleep 1.5
   }
-  printf " \n\n"
+  printf "\r                           \r"
 }
 
 parse_arguments() {
@@ -65,20 +65,29 @@ run()
   then
     breathe_n_times "$OPTNUM"
   else
-    echo "Come back when you're ready to breathe properly"
+    exit_with_usage
   fi
 }
 
 say_goodbye() {
-  printf "\n🧘 goodbye 🧘\n"
   stop_spotify
+  printf "\n🧘 goodbye 🧘\n"
 }
 
 start_spotify() {
+  osascript -e "tell application \"Spotify\" to set sound volume to 0"
   osascript -e "tell application \"Spotify\" to play track \"$RELAXING_TRACK\""
+
+  for((v=0;v<=MAX_VOLUME; v++)){
+    osascript -e "tell application \"Spotify\" to set sound volume to $v"
+  }
 }
 
 stop_spotify() {
+  for((v=MAX_VOLUME;v>0; v--)){
+    osascript -e "tell application \"Spotify\" to set sound volume to $v"
+  }
+
   osascript -e "tell application \"Spotify\" to pause"
 }
 
