@@ -1,24 +1,28 @@
 #!/bin/bash
 
+source frames.sh
+CURSOR_ORIGIN="\033[0;0H"
 RELAXING_TRACK="spotify:track:039xzKjVgqdnmoUOCXuEI2"
 MAX_VOLUME=50
 
 breathe() {
-  local CHARACTERS="....ooooooOOOOoooooooo...."
-  length=${#CHARACTERS}
+  frame_count=${#FRAMES[@]}
 
-  for((j=0; j<length; j++)){
-    ch="${CHARACTERS:j:1}"
-
-    printf "%s" $ch
-
-    case $ch in
-      'O') sleep 1 ;;
-      *) sleep 0.5 ;;
-    esac
+  # inhale
+  for((b=0;b<frame_count;b++)){
+    echo -ne "$CURSOR_ORIGIN"
+    echo -e "${FRAMES[b]}"
+    sleep 0.3
   }
 
-  printf "\r"
+  sleep 1
+
+  # exhale
+  for((b=frame_count-1;b>=0;b--)){
+    echo -ne "$CURSOR_ORIGIN"
+    echo -e "${FRAMES[b]}"
+    sleep 0.5
+  }
 }
 
 breathe_n_times() {
@@ -26,7 +30,6 @@ breathe_n_times() {
   for((i=0;i<n;i++)){
     breathe
   }
-  printf "\n"
 }
 
 exit_with_usage() {
@@ -44,7 +47,7 @@ intro() {
     printf "%s\b" "$i"
     sleep 1.5
   }
-  printf "\r                           \r"
+  clear
 }
 
 parse_arguments() {
@@ -71,7 +74,8 @@ run()
 
 say_goodbye() {
   stop_spotify
-  printf "\n🧘 goodbye 🧘\n"
+  clear
+  echo -e "\033[0m\n🧘 Goodbye :) 🧘\n"
 }
 
 start_spotify() {
@@ -95,3 +99,24 @@ trap say_goodbye EXIT
 
 parse_arguments "$@"
 run
+
+# echo -e $frame1
+# sleep 1
+# printf "\033[0;0H"
+
+# echo -e $frame2
+
+# echo $frames
+
+
+
+
+# done
+
+# numbers=(one two three)
+# # ${#numbers[@]} will give the size of the array
+# echo -e ${#frames[@]}
+# # for number in ${numbers}
+# # do
+# #   echo $number
+# # done
