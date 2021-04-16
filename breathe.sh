@@ -1,6 +1,7 @@
 #!/bin/bash
 
 source frames.sh
+
 CURSOR_ORIGIN="\033[0;0H"
 RELAXING_TRACK="spotify:track:039xzKjVgqdnmoUOCXuEI2"
 MAX_VOLUME=50
@@ -62,10 +63,9 @@ parse_arguments() {
 
 run()
 {
-  intro
-
   if [ -n "$OPTNUM" ]
   then
+    intro
     breathe_n_times "$OPTNUM"
   else
     exit_with_usage
@@ -73,9 +73,12 @@ run()
 }
 
 say_goodbye() {
-  stop_spotify
-  clear
-  echo -e "\033[0m\n🧘 Goodbye :) 🧘\n"
+  if [ -n "$OPTNUM" ]
+  then
+    stop_spotify
+    clear
+    echo -e "\033[0m\n🧘 Goodbye :) 🧘\n"
+  fi
 }
 
 start_spotify() {
@@ -99,24 +102,3 @@ trap say_goodbye EXIT
 
 parse_arguments "$@"
 run
-
-# echo -e $frame1
-# sleep 1
-# printf "\033[0;0H"
-
-# echo -e $frame2
-
-# echo $frames
-
-
-
-
-# done
-
-# numbers=(one two three)
-# # ${#numbers[@]} will give the size of the array
-# echo -e ${#frames[@]}
-# # for number in ${numbers}
-# # do
-# #   echo $number
-# # done
