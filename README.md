@@ -8,7 +8,7 @@ Breathe for your CLI
 
 ## What does it do?
 
-`breathe` helps you relax by encouraging deep breaths. Take a break and breath for as many cycles as
+`breathe` helps you relax by encouraging deep breaths. Take a break and breathe for as many cycles as
 you would like.
 
 ## Why should I breathe?
