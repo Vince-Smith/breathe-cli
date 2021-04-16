@@ -67,6 +67,7 @@ run()
   then
     intro
     breathe_n_times "$OPTNUM"
+    COMPLETE=1
   else
     exit_with_usage
   fi
@@ -77,7 +78,7 @@ say_goodbye() {
   then
     stop_spotify
     clear
-    echo -e "\033[0m\n🧘 Goodbye :) 🧘\n"
+    echo -e "\033[0m\n🧘 Goodbye :) 🧘"
   fi
 }
 
@@ -91,9 +92,12 @@ start_spotify() {
 }
 
 stop_spotify() {
-  for((v=MAX_VOLUME;v>0; v--)){
-    osascript -e "tell application \"Spotify\" to set sound volume to $v"
-  }
+  if [ -n "$COMPLETE" ]
+  then
+    for((v=MAX_VOLUME;v>0; v--)){
+      osascript -e "tell application \"Spotify\" to set sound volume to $v"
+    }
+  fi
 
   osascript -e "tell application \"Spotify\" to pause"
 }
