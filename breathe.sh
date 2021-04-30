@@ -100,6 +100,8 @@ stop_spotify() {
   fi
 
   osascript -e "tell application \"Spotify\" to pause"
+  # reset spotify volume
+  osascript -e "tell application \"Spotify\" to set sound volume to 100"
 }
 
 trap say_goodbye EXIT
